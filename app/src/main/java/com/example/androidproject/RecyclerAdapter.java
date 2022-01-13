@@ -12,6 +12,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bumptech.glide.Glide;
@@ -19,55 +20,74 @@ import com.bumptech.glide.Glide;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>{
     private Context context;
-    private List<Room> roomList;
+    private ArrayList<Room> roomList;
 //    private int[] imageIds;
 //    private String[] description;
 
 
-    public RecyclerAdapter(Context context, List<Room> roomList) {
+    public RecyclerAdapter(Context context, ArrayList<Room> roomList) {
         this.context = context;
         this.roomList = roomList;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        //card_captioned_image
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.customer_card, null);
 
+        CardView v = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.customer_card,
+                parent,
+                false);
 
-        return new ViewHolder((CardView) view);
+        return new ViewHolder(v);
     }
+
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Room room = roomList.get(position);
+        final Room room = roomList.get(position);
+        CardView cardView = holder.cardView;
 
-        Glide.with(context).load(room.getImage()).into(holder.imageView);
+        ImageView imageView = (ImageView) cardView.findViewById(R.id.roomImage);
+        //Picasso.with(context).load(room.getImage()).into(imageView);
+        Glide.with(context).load(room.getImage()).override(800, 800).into(holder.img_android);
 
-        holder.textViewId.setText(room.getId());
-        holder.textViewCapacity.setText(room.getCapacity());
-        holder.textViewPriceByDay.setText(String.valueOf(room.getPriceByDay()));
+        // Glide.with(context).load(room.getImage()).into(imageView);
+        TextView roomId = (TextView)cardView.findViewById(R.id.roomId);
+        roomId.setText(String.valueOf(room.getId()));
+        TextView roomCapacity = (TextView)cardView.findViewById(R.id.roomCapacity);
+        roomCapacity.setText(String.valueOf(room.getCapacity()));
+        TextView roomPriceByDay = (TextView)cardView.findViewById(R.id.roomPriceByDay);
+        roomPriceByDay.setText(String.valueOf(room.getPriceByDay()));
 
-
-/*
+        cardView.setOnClickListener( new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                //
+            }
+        });
+    }
+    /*
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final Pizza pizza = items.get(position);
         CardView cardView = holder.cardView;
         ImageView imageView = (ImageView) cardView.findViewById(R.id.image);
-        Drawable dr = ContextCompat.getDrawable(cardView.getContext(), imageIds[position]);
-
-        imageView.setImageDrawable(dr);
-
+        Glide.with(context).load(pizza.getImage()).into(imageView);
         TextView txt = (TextView)cardView.findViewById(R.id.txtName);
-        txt.setText(description[position]);
-
- */
-//        cardView.setOnClickListener( new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v){
-//                //
-//            }
-//        });
+        txt.setText(pizza.getName());
+        cardView.setOnClickListener( new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                //
+            }
+        });
     }
+     */
+
+
+
+
+
+
 
     @Override
     public int getItemCount() {
@@ -75,20 +95,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView imageView;
-        TextView textViewId, textViewCapacity, textViewPriceByDay;
-//        private CardView cardView;
-
+        private CardView cardView;
+        ImageView img_android;
         public ViewHolder(CardView cardView){
             super(cardView);
-//            this.cardView = cardView;
-
-            imageView = itemView.findViewById(R.id.roomImage);
-            textViewId = itemView.findViewById(R.id.roomId);
-            textViewCapacity = itemView.findViewById(R.id.roomCapacity);
-            textViewPriceByDay = itemView.findViewById(R.id.roomPriceByDay);
-
+            img_android = cardView.findViewById(R.id.roomImage);
+            this.cardView = cardView;
         }
-
     }
+
 }
